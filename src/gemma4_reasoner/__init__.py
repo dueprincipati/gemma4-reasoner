@@ -1,6 +1,6 @@
 """Gemma 4 Multimodal Reasoner — A production-ready reasoning engine."""
 
-from .config import ReasoningConfig, ModelSize, ImageTokenBudget
+from .config import ReasoningConfig, ModelSize, ImageTokenBudget, BackendType
 from .reasoner import Gemma4Reasoner
 from .image_processor import ImageProcessor
 from .prompt_builder import PromptBuilder
@@ -11,6 +11,7 @@ __all__ = [
     "ReasoningConfig",
     "ModelSize",
     "ImageTokenBudget",
+    "BackendType",
     "ImageProcessor",
     "PromptBuilder",
 ]
