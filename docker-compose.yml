@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  reasoner:
+    build: .
+    image: gemma4-reasoner:latest
+    volumes:
+      - ./data:/data:ro
+      - ./output:/output
+    environment:
+      - BACKEND=ollama
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - MODEL_SIZE=e4b
+      - THINKING=true
+    depends_on:
+      - ollama
+    profiles:
+      - full
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    profiles:
+      - full
+
+  # Standalone: connect to your own Ollama/vLLM server
+  reasoner-standalone:
+    build: .
+    image: gemma4-reasoner:latest
+    volumes:
+      - ./data:/data:ro
+      - ./output:/output
+    environment:
+      - BACKEND=ollama
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      - MODEL_SIZE=${MODEL_SIZE:-e4b}
+    profiles:
+      - standalone
+
+volumes:
+  ollama-data:
